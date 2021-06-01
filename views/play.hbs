@@ -1,0 +1,14 @@
+<div style="text-align: center">
+    {{# if error}}
+        <h1>Sorry! Can't Let you In.</h1>
+        <h3>Your IP seems Suspicious, Please contact admin and ask them to whitelist your IP.</h3>
+        <h3>Your IP: {{ip}}</h3>
+    {{else}}
+        <h1>Congratulations! Your IP: {{ip}} Is whitelisted for 24 hours.</h1>
+        <h3>Press This Button To Play</h3>
+        <form action="POST" id="login-forum">
+            <input type="button" value="Connect" class="btn btn-primary">
+        </form>
+    {{/if}}
+
+</div>

@@ -1,0 +1,27 @@
+<div style="text-align: center">
+    <h1>Click The Button To connect to BD-PRO Server</h1>
+    <form action="/play" id="play-forum" method="post">
+        <input type="hidden" name="token" value="" id="token">
+        <button type="button" class="btn btn-primary btn-loading text-center " onclick="onClick(event)">
+            <div class="spinner-border position-absolute" style="margin-top: -4px; display: none; margin: 0 auto;" role="status" id="btn-spinner">
+            </div>
+            <div style="min-width: 100px; min-height: 25px;" id="btn-text">Play Now</div>
+        </button>
+    </form>
+</div>
+<script>
+    function onClick(e) {
+        e.preventDefault();
+        document.querySelector("#btn-spinner").style.display = "block";
+        document.querySelector("#btn-text").textContent = "";
+        console.log("Click")
+        grecaptcha.ready(function () {
+            grecaptcha.execute('6LdzPgYbAAAAADQ8JLiCPD8LvWr9UKcc-G4iNr_t', {action: 'play'}).then(function (token) {
+                // Add your logic to submit to your backend server here.
+                document.querySelector("#token").value = token;
+                document.querySelector("#play-forum").submit()
+                console.log(token)
+            });
+        });
+    }
+</script>
