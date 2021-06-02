@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const exec = require('sync-exec');
 
 let axios = require("axios");
 
@@ -15,19 +16,29 @@ router.post('/play', async (req, res) => {
     if(!req.body.token) return res.render('play', {title: 'Connect', ip: req.ip, error: true});
     const url = `https://www.google.com/recaptcha/api/siteverify?secret=6LdzPgYbAAAAACOFvfEXDBFRJeEzp2hACpRikdgm&response=${req.body.token}`;
     // console.log(req.body);
+    // console.log(req.headers);
+    let ip = req.headers["x-forwarded-for"];
     try {
         let data = await axios.get(url)
         let resp = data.data;
         console.log(resp)
-        if(!resp.success) return res.render('play', {title: 'Connect', ip: req.ip, error: true});
-        if(resp.score < minScore) return res.render('play', {title: 'Connect', ip: req.ip, error: true});
+        if(!resp.success) return res.render('play', {title: 'Connect', ip: ip, error: true});
+        if(resp.score < minScore) return res.render('play', {title: 'Connect', ip: ip, error: true});
 
         // All done, User Validated. Now add firewall rule to IPTables
+        for(let i = 0; i <= 5; i++) {
+            exec("sudo iptables -D INPUT -p tcp --dport 30120 -j DROP");
+            exec("sudo iptables -D INPUT -p udp --dport 30120 -j DROP");
+        }
         
-        res.render('play', {title: 'Connect', ip: req.ip});
+        exec(`sudo iptables -A INPUT -p tcp --dport 30120 -s ${ip} -j ACCEPT`);
+        exec(`sudo iptables -A INPUT -p udp --dport 30120 -s ${ip} -j ACCEPT`);
+        exec("sudo iptables -A INPUT -p udp --dport 30120 -j DROP");
+        exec("sudo iptables -A INPUT -p tcp --dport 30120 -j DROP");
+        res.render('play', {title: 'Connect', ip: ip});
     } catch (e) {
         console.log(e)
-        res.render('play', {title: 'Connect', ip: req.ip, error: true});
+        res.render('play', {title: 'Connect', ip: ip, error: true});
     }
 
 })
