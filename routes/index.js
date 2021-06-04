@@ -1,13 +1,34 @@
 var express = require('express');
 var router = express.Router();
 const exec = require('sync-exec');
+const path  = require("path");
 
 let axios = require("axios");
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    res.render('index', {title: 'Express'});
+    res.render('index', {title: 'Fivem DDOS Protect'});
 });
+
+
+router.get("/thumpnail.png", async (req, res) => {
+    let image = path.join(__dirname, "../banner.png");
+    let ip = req.headers["x-forwarded-for"];
+    for(let i = 0; i <= 5; i++) {
+        exec("sudo iptables -D INPUT -p tcp --dport 30120 -j DROP");
+        exec("sudo iptables -D INPUT -p udp --dport 30120 -j DROP");
+        exec(`sudo iptables -D INPUT -p tcp --dport 30120 -s ${ip} -j ACCEPT`);
+        exec(`sudo iptables -D INPUT -p udp --dport 30120 -s ${ip} -j ACCEPT`);
+    }
+    
+    exec(`sudo iptables -A INPUT -p tcp --dport 30120 -s ${ip} -j ACCEPT`);
+    exec(`sudo iptables -A INPUT -p udp --dport 30120 -s ${ip} -j ACCEPT`);
+    exec("sudo iptables -A INPUT -p udp --dport 30120 -j DROP");
+    exec("sudo iptables -A INPUT -p tcp --dport 30120 -j DROP");
+    console.log(ip);
+    res.sendfile(image);
+})
+
 
 // Set Minimum Score required for this login.
 let minScore = 0.5;  // 0 for no filter, 1 for maximum security (Probably no one will get pass)
@@ -29,6 +50,8 @@ router.post('/play', async (req, res) => {
         for(let i = 0; i <= 5; i++) {
             exec("sudo iptables -D INPUT -p tcp --dport 30120 -j DROP");
             exec("sudo iptables -D INPUT -p udp --dport 30120 -j DROP");
+            exec(`sudo iptables -D INPUT -p tcp --dport 30120 -s ${ip} -j ACCEPT`);
+            exec(`sudo iptables -D INPUT -p udp --dport 30120 -s ${ip} -j ACCEPT`);
         }
         
         exec(`sudo iptables -A INPUT -p tcp --dport 30120 -s ${ip} -j ACCEPT`);

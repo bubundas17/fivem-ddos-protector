@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('fivem-ddos-protector:server');
 var http = require('http');
+const exec = require('sync-exec');
 
 /**
  * Get port from environment and store in Express.
@@ -25,7 +26,7 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port, "0.0.0.0");
+server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -81,10 +82,41 @@ function onError(error) {
  * Event listener for HTTP server "listening" event.
  */
 
+
+function initRules() {
+  // Fivem Rules
+  let ips = [
+    "201.42.94.22",
+    "146.59.193.195",
+    "51.210.126.15",
+    "51.178.63.83",
+    "178.33.224.212",
+    "5.135.143.71",
+    "121.4.163.148"
+  ]
+  exec("sudo iptables -F");
+  exec("sudo iptables -X");
+  for (let i = 0; i <= 5; i++) {
+    exec("sudo iptables -D INPUT -p tcp --dport 30120 -j DROP");
+    exec("sudo iptables -D INPUT -p udp --dport 30120 -j DROP");
+    for(let ip of ips ) {
+      exec(`sudo iptables -D INPUT -p tcp --dport 30120 -s ${ip} -j ACCEPT`);
+      exec(`sudo iptables -D INPUT -p udp --dport 30120 -s ${ip} -j ACCEPT`);
+    }
+  }
+  for(let ip of ips ) {
+    exec(`sudo iptables -A INPUT -p tcp --dport 30120 -s ${ip} -j ACCEPT`);
+    exec(`sudo iptables -A INPUT -p udp --dport 30120 -s ${ip} -j ACCEPT`);
+  }
+  exec("sudo iptables -A INPUT -p tcp --dport 30120 -j DROP");
+  exec("sudo iptables -A INPUT -p udp --dport 30120 -j DROP");
+}
+
 function onListening() {
+  initRules();
   var addr = server.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+  console.log('Listening on ' + bind);
 }
