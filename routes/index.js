@@ -11,7 +11,7 @@ router.get('/', function (req, res, next) {
 });
 
 
-router.get("/thumpnail.png", async (req, res) => {
+router.get("/thumbnail.png", async (req, res) => {
     let image = path.join(__dirname, "../banner.png");
     let ip = req.headers["x-forwarded-for"];
     for(let i = 0; i <= 5; i++) {
