@@ -1,0 +1,13 @@
+#stream {
+    upstream {{ id }}{
+        server  {{ fivemIP }}:{{ fivemPort }};
+    }
+    server {
+        listen {{ fivemPort }};
+        proxy_pass {{id}};
+    }
+    server {
+        listen {{ fivemPort }} udp reuseport;
+        proxy_pass {{ id }};
+    }
+#}

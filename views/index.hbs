@@ -1,5 +1,5 @@
 <div style="text-align: center">
-    <h1>Click The Button To connect to BD-PRO Server</h1>
+    <h1>Click The Button To connect to {{ name }}</h1>
     <form action="/play" id="play-forum" method="post">
         <input type="hidden" name="token" value="" id="token">
         <button type="button" class="btn btn-primary btn-loading text-center " onclick="onClick(event)">
@@ -14,7 +14,6 @@
         e.preventDefault();
         document.querySelector("#btn-spinner").style.display = "block";
         document.querySelector("#btn-text").textContent = "";
-        console.log("Click")
         grecaptcha.ready(function () {
             grecaptcha.execute('6LdzPgYbAAAAADQ8JLiCPD8LvWr9UKcc-G4iNr_t', {action: 'play'}).then(function (token) {
                 // Add your logic to submit to your backend server here.

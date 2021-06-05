@@ -3,29 +3,34 @@ var router = express.Router();
 const exec = require('sync-exec');
 const path  = require("path");
 
+const config = require("../config");
 let axios = require("axios");
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    res.render('index', {title: 'Fivem DDOS Protect'});
+    res.render('index', {title: req.config.name, name: req.config.name});
 });
 
+router.get("/debug", (req, res) => {
+    res.send(req.config)
+})
 
-router.get("/thumbnail.png", async (req, res) => {
-    let image = path.join(__dirname, "../banner.png");
+
+router.get("/thumbnails/:id.png", async (req, res) => {
+    let image = path.join(__dirname, `../thumbnails/${req.config.id}.png`);
     let ip = req.headers["x-forwarded-for"];
     for(let i = 0; i <= 5; i++) {
-        exec("sudo iptables -D INPUT -p tcp --dport 30120 -j DROP");
-        exec("sudo iptables -D INPUT -p udp --dport 30120 -j DROP");
-        exec(`sudo iptables -D INPUT -p tcp --dport 30120 -s ${ip} -j ACCEPT`);
-        exec(`sudo iptables -D INPUT -p udp --dport 30120 -s ${ip} -j ACCEPT`);
+        exec(`sudo iptables -D INPUT -p tcp --dport ${req.config.fivemPort} -j DROP`);
+        exec(`sudo iptables -D INPUT -p udp --dport ${req.config.fivemPort} -j DROP`);
+        exec(`sudo iptables -D INPUT -p tcp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
+        exec(`sudo iptables -D INPUT -p udp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
     }
     
-    exec(`sudo iptables -A INPUT -p tcp --dport 30120 -s ${ip} -j ACCEPT`);
-    exec(`sudo iptables -A INPUT -p udp --dport 30120 -s ${ip} -j ACCEPT`);
-    exec("sudo iptables -A INPUT -p udp --dport 30120 -j DROP");
-    exec("sudo iptables -A INPUT -p tcp --dport 30120 -j DROP");
-    console.log(ip);
+    exec(`sudo iptables -A INPUT -p tcp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
+    exec(`sudo iptables -A INPUT -p udp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
+    exec(`sudo iptables -A INPUT -p udp --dport ${req.config.fivemPort} -j DROP`);
+    exec(`sudo iptables -A INPUT -p tcp --dport ${req.config.fivemPort} -j DROP`);
+    // console.log(ip);
     res.sendfile(image);
 })
 
@@ -48,17 +53,17 @@ router.post('/play', async (req, res) => {
 
         // All done, User Validated. Now add firewall rule to IPTables
         for(let i = 0; i <= 5; i++) {
-            exec("sudo iptables -D INPUT -p tcp --dport 30120 -j DROP");
-            exec("sudo iptables -D INPUT -p udp --dport 30120 -j DROP");
-            exec(`sudo iptables -D INPUT -p tcp --dport 30120 -s ${ip} -j ACCEPT`);
-            exec(`sudo iptables -D INPUT -p udp --dport 30120 -s ${ip} -j ACCEPT`);
+            exec(`sudo iptables -D INPUT -p tcp --dport ${req.config.fivemPort} -j DROP`);
+            exec(`sudo iptables -D INPUT -p udp --dport ${req.config.fivemPort} -j DROP`);
+            exec(`sudo iptables -D INPUT -p tcp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
+            exec(`sudo iptables -D INPUT -p udp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
         }
         
-        exec(`sudo iptables -A INPUT -p tcp --dport 30120 -s ${ip} -j ACCEPT`);
-        exec(`sudo iptables -A INPUT -p udp --dport 30120 -s ${ip} -j ACCEPT`);
-        exec("sudo iptables -A INPUT -p udp --dport 30120 -j DROP");
-        exec("sudo iptables -A INPUT -p tcp --dport 30120 -j DROP");
-        res.render('play', {title: 'Connect', ip: ip});
+        exec(`sudo iptables -A INPUT -p tcp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
+        exec(`sudo iptables -A INPUT -p udp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
+        exec(`sudo iptables -A INPUT -p udp --dport ${req.config.fivemPort} -j DROP`);
+        exec(`sudo iptables -A INPUT -p tcp --dport ${req.config.fivemPort} -j DROP`);
+        res.render('play', {title: 'Connect', ip: ip, fivemPort: req.config.fivemPort, serverIP: config.serverIP, name: req.config.name});
     } catch (e) {
         console.log(e)
         res.render('play', {title: 'Connect', ip: ip, error: true});

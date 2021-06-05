@@ -5,8 +5,8 @@
         <h3>Your IP: {{ip}}</h3>
     {{else}}
         <h1>Congratulations! Your IP: {{ip}} Is whitelisted for 24 hours.</h1>
-        <h3>Press This Button To Play</h3>
-        <a class="btn btn-primary" href="fivem://connect/20.198.111.120:30120">Connect</a>
+        <h3>Press This Button To Play {{ name }}</h3>
+        <a class="btn btn-primary" href="fivem://connect/{{serverIP}}:{{fivemPort}}">Connect</a>
     {{/if}}
 
 </div>
