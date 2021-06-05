@@ -11,32 +11,33 @@ module.exports = {
     serverIP: "20.198.111.120",
     servers: [
         {
-            id: "olrp",
-            domain: "olrp.online",
-            name: "OLRP Online",
-            reSecret: "",
-            reSiteKey: "",
-            fivemIP: "152.126.50.5",
-            fivemPort: 30125
-        },
-        {
-            id: "fivemshield",
+            id: "s1fivemshield",
             domain: "fivemshield.xyz",
+            default: true,
             name: "fivemshield Online",
             reSecret: "",
             reSiteKey: "",
-            fivemIP: "152.126.50.5",
-            fivemPort: 30126
+            fivemIP: "52.188.112.219",
+            fivemPort: 30120
         },
         {
-            id: "default",
-            default: true,          // Fallback all other domains to this config
-            domain: "default.xyz",
-            name: "default Online",
+            id: "fivemshield",
+            domain: "s1.fivemshield.xyz",
+            name: "fivemshield Online",
             reSecret: "",
             reSiteKey: "",
-            fivemIP: "152.126.50.5",
-            fivemPort: 30127
-        }
+            fivemIP: "52.188.112.219",
+            fivemPort: 30121
+        },
+        // {
+        //     id: "default",
+        //     default: true,          // Fallback all other domains to this config
+        //     domain: "default.xyz",
+        //     name: "default Online",
+        //     reSecret: "",
+        //     reSiteKey: "",
+        //     fivemIP: "52.188.112.219",
+        //     fivemPort: 30127
+        // }
     ]
 }

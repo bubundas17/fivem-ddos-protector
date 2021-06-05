@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// sudo certbot --agree-tos --nginx -n -m bubundas17@gmail.com --domains s1.fivemshield.xyz
 
 let config = require("./config")
 
@@ -10,6 +11,8 @@ const exec = require('sync-exec');
 (async () => {
     updateNginx();
     updateIptables();
+    console.log("Restarting Nginx")
+    exec(`sudo service nginx restart`);
 })()
 
 function updateIptables() {
