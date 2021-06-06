@@ -11,14 +11,14 @@ const exec = require('sync-exec');
 (async () => {
     updateNginx();
     updateIptables();
-    console.log("Restarting Nginx")
-    exec(`sudo service nginx restart`);
+    console.log("Reloading Nginx")
+    exec(`sudo service nginx reload`);
 })()
 
 function updateIptables() {
     console.log("Reseting Iptables Rules.")
-    exec("sudo iptables -F");
-    exec("sudo iptables -X");
+//    exec("sudo iptables -F");
+//    exec("sudo iptables -X");
     for (let server of config.servers) {
         console.log("Writing Iptables Rules for " + server.domain)
         for (let i = 0; i <= 5; i++) {
