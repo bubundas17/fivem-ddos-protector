@@ -28,9 +28,11 @@ After that point A records to corosponding domains.
 
 Now run the nodejs server
 
-```pm2 startup
+```bash
+pm2 startup
 pm2 start bin/www
-pm2 save```
+pm2 save
+```
 
 ### Adding/Removing Fivem domains/servers
 
