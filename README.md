@@ -8,7 +8,9 @@ there you'll find setup.sh file
 ``` bash
 git clone https://github.com/bubundas17/fivem-ddos-protector.git
 ```
-
+``` bash
+cd fivem-ddos-protector/nginx
+```
 Now run
 ``` bash
 sudo bash setup.sh
