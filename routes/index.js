@@ -17,7 +17,7 @@ router.get("/debug", (req, res) => {
 
 
 router.get("/thumbnails/:id.png", async (req, res) => {
-    let image = path.join(__dirname, `../thumbnails/${req.config.id}.png`);
+    let image = path.join(__dirname, `../thumbnails/${req.params.id}.png`);
     let ip = req.headers["x-forwarded-for"];
     for(let i = 0; i <= 5; i++) {
         exec(`sudo iptables -D INPUT -p tcp --dport ${req.config.fivemPort} -j DROP`);
