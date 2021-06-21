@@ -20,7 +20,7 @@ It will install nginx nodejs and some other dependencies.
 
 After that go back to root of this project and run 
 ``` bash
-npm install
+sudo npm install
 ```
 now edit config.js and enter domain name and fivem server ip and port. 
 
