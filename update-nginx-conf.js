@@ -17,9 +17,16 @@ const exec = require('sync-exec');
 
 function updateIptables() {
     console.log("Reseting Iptables Rules.")
-//    exec("sudo iptables -F");
-//    exec("sudo iptables -X");
+    exec("sudo iptables -F");
+    exec("sudo iptables -X");
     for (let server of config.servers) {
+
+        for (let i = 0; i <= 5; i++) {
+            exec(`sudo iptables -D INPUT -p tcp --dport ${server.fivemPort} -m connlimit --connlimit-above 5 -j REJECT`);
+            exec(`sudo iptables -D INPUT -p tcp --dport ${server.fivemPort} -m connlimit --connlimit-above 5 -j REJECT`);
+        }
+        exec(`sudo iptables -A INPUT -p tcp --dport ${server.fivemPort} -m connlimit --connlimit-above 5 -j REJECT`);
+        exec(`sudo iptables -A INPUT -p tcp --dport ${server.fivemPort} -m connlimit --connlimit-above 5 -j REJECT`);
         console.log("Writing Iptables Rules for " + server.domain)
         for (let i = 0; i <= 5; i++) {
             exec(`sudo iptables -D INPUT -p tcp --dport ${server.fivemPort} -j DROP`);
