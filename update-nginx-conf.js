@@ -22,19 +22,19 @@ function updateIptables() {
     for (let server of config.servers) {
         console.log("Writing Iptables Rules for " + server.domain)
         for (let i = 0; i <= 5; i++) {
-            exec(`sudo iptables -D INPUT -p tcp --dport ${server.fivemPort} -j DROP`);
-            exec(`sudo iptables -D INPUT -p udp --dport ${server.fivemPort} -j DROP`);
+            exec(`sudo iptables -D INPUT -m state --state NEW -p tcp --dport ${server.fivemPort} -j DROP`);
+            exec(`sudo iptables -D INPUT -m state --state NEW -p udp --dport ${server.fivemPort} -j DROP`);
             for (let ip of config.defaultWhitelistIps) {
-                exec(`sudo iptables -D INPUT -p tcp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
-                exec(`sudo iptables -D INPUT -p udp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
+                exec(`sudo iptables -D INPUT -m state --state NEW -p tcp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
+                exec(`sudo iptables -D INPUT -m state --state NEW -p udp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
             }
         }
         for (let ip of config.defaultWhitelistIps) {
-            exec(`sudo iptables -A INPUT -p tcp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
-            exec(`sudo iptables -A INPUT -p udp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
+            exec(`sudo iptables -A INPUT -m state --state NEW -p tcp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
+            exec(`sudo iptables -A INPUT -m state --state NEW -p udp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
         }
-        exec(`sudo iptables -A INPUT -p tcp --dport ${server.fivemPort} -j DROP`);
-        exec(`sudo iptables -A INPUT -p udp --dport ${server.fivemPort} -j DROP`);
+        exec(`sudo iptables -A INPUT -m state --state NEW -p tcp --dport ${server.fivemPort} -j DROP`);
+        exec(`sudo iptables -A INPUT -m state --state NEW -p udp --dport ${server.fivemPort} -j DROP`);
     }
 }
 

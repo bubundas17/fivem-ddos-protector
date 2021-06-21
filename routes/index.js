@@ -20,16 +20,16 @@ router.get("/thumbnails/:id.png", async (req, res) => {
     let image = path.join(__dirname, `../thumbnails/${req.config.id}.png`);
     let ip = req.headers["x-forwarded-for"];
     for(let i = 0; i <= 5; i++) {
-        exec(`sudo iptables -D INPUT -p tcp --dport ${req.config.fivemPort} -j DROP`);
-        exec(`sudo iptables -D INPUT -p udp --dport ${req.config.fivemPort} -j DROP`);
-        exec(`sudo iptables -D INPUT -p tcp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
-        exec(`sudo iptables -D INPUT -p udp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
+        exec(`sudo iptables -D INPUT -m state --state NEW -p tcp --dport ${req.config.fivemPort} -j DROP`);
+        exec(`sudo iptables -D INPUT -m state --state NEW -p udp --dport ${req.config.fivemPort} -j DROP`);
+        exec(`sudo iptables -D INPUT -m state --state NEW -p tcp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
+        exec(`sudo iptables -D INPUT -m state --state NEW -p udp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
     }
     
-    exec(`sudo iptables -A INPUT -p tcp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
-    exec(`sudo iptables -A INPUT -p udp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
-    exec(`sudo iptables -A INPUT -p udp --dport ${req.config.fivemPort} -j DROP`);
-    exec(`sudo iptables -A INPUT -p tcp --dport ${req.config.fivemPort} -j DROP`);
+    exec(`sudo iptables -A INPUT -m state --state NEW -p tcp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
+    exec(`sudo iptables -A INPUT -m state --state NEW -p udp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
+    exec(`sudo iptables -A INPUT -m state --state NEW -p udp --dport ${req.config.fivemPort} -j DROP`);
+    exec(`sudo iptables -A INPUT -m state --state NEW -p tcp --dport ${req.config.fivemPort} -j DROP`);
     // console.log(ip);
     res.sendfile(image);
 })
@@ -53,16 +53,16 @@ router.post('/play', async (req, res) => {
 
         // All done, User Validated. Now add firewall rule to IPTables
         for(let i = 0; i <= 5; i++) {
-            exec(`sudo iptables -D INPUT -p tcp --dport ${req.config.fivemPort} -j DROP`);
-            exec(`sudo iptables -D INPUT -p udp --dport ${req.config.fivemPort} -j DROP`);
-            exec(`sudo iptables -D INPUT -p tcp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
-            exec(`sudo iptables -D INPUT -p udp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
+            exec(`sudo iptables -D INPUT -m state --state NEW -p tcp --dport ${req.config.fivemPort} -j DROP`);
+            exec(`sudo iptables -D INPUT -m state --state NEW -p udp --dport ${req.config.fivemPort} -j DROP`);
+            exec(`sudo iptables -D INPUT -m state --state NEW -p tcp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
+            exec(`sudo iptables -D INPUT -m state --state NEW -p udp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
         }
         
-        exec(`sudo iptables -A INPUT -p tcp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
-        exec(`sudo iptables -A INPUT -p udp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
-        exec(`sudo iptables -A INPUT -p udp --dport ${req.config.fivemPort} -j DROP`);
-        exec(`sudo iptables -A INPUT -p tcp --dport ${req.config.fivemPort} -j DROP`);
+        exec(`sudo iptables -A INPUT -m state --state NEW -p tcp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
+        exec(`sudo iptables -A INPUT -m state --state NEW -p udp --dport ${req.config.fivemPort} -s ${ip} -j ACCEPT`);
+        exec(`sudo iptables -A INPUT -m state --state NEW -p udp --dport ${req.config.fivemPort} -j DROP`);
+        exec(`sudo iptables -A INPUT -m state --state NEW -p tcp --dport ${req.config.fivemPort} -j DROP`);
         res.render('play', {title: 'Connect', ip: ip, fivemPort: req.config.fivemPort, serverIP: config.serverIP, name: req.config.name});
     } catch (e) {
         console.log(e)
