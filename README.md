@@ -59,3 +59,13 @@ now restart nodejs webserver
 ``` bash
 pm2 restart all
 ```
+
+
+Server.CFG setup : 
+
+```
+sv_forceIndirectListing true
+sv_listingHostOverride dbrpwhitelist.ml
+sv_listingIpOverride "52.237.97.98"
+sv_proxyIPPranges "52.237.97.98/32"
+```
