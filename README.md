@@ -69,3 +69,7 @@ sv_listingHostOverride dbrpwhitelist.ml
 sv_listingIpOverride "52.237.97.98"
 sv_proxyIPPranges "52.237.97.98/32"
 ```
+SSL INSTALLER :
+```
+sudo certbot
+```
