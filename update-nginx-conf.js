@@ -17,8 +17,8 @@ const exec = require('sync-exec');
 
 function updateIptables() {
     console.log("Reseting Iptables Rules.")
-    exec("sudo iptables -F");
-    exec("sudo iptables -X");
+//    exec("sudo iptables -F");
+//    exec("sudo iptables -X");
     for (let server of config.servers) {
 
         // for (let i = 0; i <= 5; i++) {
