@@ -12,7 +12,7 @@ const exec = require('sync-exec');
     updateNginx();
     updateIptables();
     console.log("Reloading Nginx")
-    exec(`sudo service nginx reload`);
+    exec(`service nginx reload`);
 })()
 
 function updateIptables() {
@@ -29,19 +29,19 @@ function updateIptables() {
         // exec(`sudo iptables -A INPUT -p tcp --dport ${server.fivemPort} -m connlimit --connlimit-above 5 -j REJECT`);
         console.log("Writing Iptables Rules for " + server.domain)
         for (let i = 0; i <= 5; i++) {
-            exec(`sudo iptables -D INPUT -p tcp --dport ${server.fivemPort} -j DROP`);
-            exec(`sudo iptables -D INPUT -p udp --dport ${server.fivemPort} -j DROP`);
+            exec(`iptables -D INPUT -p tcp --dport ${server.fivemPort} -j DROP`);
+            exec(`iptables -D INPUT -p udp --dport ${server.fivemPort} -j DROP`);
             for (let ip of config.defaultWhitelistIps) {
-                exec(`sudo iptables -D INPUT -p tcp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
-                exec(`sudo iptables -D INPUT -p udp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
+                exec(`iptables -D INPUT -p tcp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
+                exec(`iptables -D INPUT -p udp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
             }
         }
         for (let ip of config.defaultWhitelistIps) {
-            exec(`sudo iptables -A INPUT -p tcp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
-            exec(`sudo iptables -A INPUT -p udp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
+            exec(`iptables -A INPUT -p tcp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
+            exec(`iptables -A INPUT -p udp --dport ${server.fivemPort} -s ${ip} -j ACCEPT`);
         }
-        exec(`sudo iptables -A INPUT -p tcp --dport ${server.fivemPort} -j DROP`);
-        exec(`sudo iptables -A INPUT -p udp --dport ${server.fivemPort} -j DROP`);
+        exec(`iptables -A INPUT -p tcp --dport ${server.fivemPort} -j DROP`);
+        exec(`iptables -A INPUT -p udp --dport ${server.fivemPort} -j DROP`);
     }
 }
 
